@@ -37,9 +37,6 @@ def load_data(train_path, val_path, test_path):
     for idx in range(len(data)):
 
         for path in data[idx]:
-            
-            trash_hot_class = [0] * 6
-            trash_hot_class[int(path[path.find(" ") + 1]) - 1] = 1
 
             trash_type = "".join([i for i in path[:-7] if i not in "0123456789"])
 
@@ -71,7 +68,38 @@ def load_data(train_path, val_path, test_path):
                     os.path.join(root_dir, trash_type, path[:-3]),
                     os.path.join(root_dir, "test", trash_type))
 
-load_data(
-        "./garbage-classification/one-indexed-files-notrash_train.txt",
-        "./garbage-classification/one-indexed-files-notrash_val.txt",
-        "./garbage-classification/one-indexed-files-notrash_test.txt")
+# load_data(
+#         "./garbage-classification/one-indexed-files-notrash_train.txt",
+#         "./garbage-classification/one-indexed-files-notrash_val.txt",
+#         "./garbage-classification/one-indexed-files-notrash_test.txt")
+
+def dis_data_from_test(test_path):
+
+    with open(test_path, "r", encoding='utf-8') as f:
+
+        test_paths = f.readlines()
+        test_length = len(test_paths)
+
+        train_path = test_paths[:int(test_length * 0.8)]
+        val_path = test_paths[int(test_length * 0.8):]
+
+        root_dir = "garbage-classification/Garbage classification"
+
+        for path in train_path:
+            
+            print(path)
+            trash_type = "".join([i for i in path[:-7] if i not in "0123456789"])
+
+            newPath = shutil.copy(
+                    os.path.join(root_dir, trash_type, path[:-3]),
+                    os.path.join(root_dir, "train", trash_type))
+
+        for path in val_path:
+            
+            trash_type = "".join([i for i in path[:-7] if i not in "0123456789"])
+
+            newPath = shutil.copy(
+                    os.path.join(root_dir, trash_type, path[:-3]),
+                    os.path.join(root_dir, "val", trash_type))
+
+dis_data_from_test("./garbage-classification/one-indexed-files-notrash_test.txt")
