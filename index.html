@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags always come first-->
+    <meta charset = "utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content = "ie=edge">
+
+    <!--Bootstrap CSS-->
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="node_modules/bootstrap-social/bootstrap-social.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    
+    <title>Trash Classification</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><img src="img/treegif.gif" width="100" height="100"></a>           
+            <a class="ml-auto"><p>A website for trash classification using PyTorch</p></a>
+        </div>
+    </nav>
+
+    <div id="slides" class="carousel slide" data-ride="carousel">
+        <ul class="carousel-indicators">
+            <li data-target="#slides" data-slide-to="0" class="active"></li>
+        </ul>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="img/gif1.gif">
+                <div class=carousel-caption>
+                    <h1 class="display-1">PyTorch</h1>
+                    <h2>Trash Classification</h2>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="container-fluid padding">
+        <div class="row welcome text-center">
+            <div class="col-12">
+                <h1 class="display-5">Classify Trash</h1>
+            </div>
+            <hr>
+            <div class="col-12">
+                <hr>
+                <p class="lead">
+                    Upload your image and the CNN model that we built will help you classify your trash
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="row">
+            <div class = "col-8 col-sm-8 offset-4">
+                <label for="avatar">Please choose a picture:</label>
+
+                <input type="file"
+                        id="InpImg" name="InpImg"
+                        accept="image/png, image/jpeg, image/jpg"
+                        onchange="readURL(this);"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8 col-8-sm offset-3">
+                <div style="width:602px;height:402px;border:1px solid #000;">
+                    <img src="img/empty.png" id="profile-img-tag" width="600px" height="400px" />
+                </div>
+            </div>
+            <div class="col-8 col-sm-8 offset-8">
+                <br>
+                <button type="button" class="btn btn-primary btn-lg">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        
+    </footer>
+
+ <!-- jQuery first, then Popper.js, then Bootstrap JS. -->
+<script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
+<script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function (e) {
+                $('#profile-img-tag').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    $("#InpImg").change(function(){
+        readURL(this);
+    });
+</script>
+
+</body>
+</html>
