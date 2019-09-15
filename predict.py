@@ -6,6 +6,7 @@ import numpy as np
 import torchvision
 from torchvision import datasets, models, transforms
 from PIL import Image
+from trash_cnn_pytorch import train_model
 
 def createModel(num_classes=6, w_drop=True):
 
@@ -73,6 +74,32 @@ def predict(model, img, transform, epoch, classes=['cardboard', 'glass', 'metal'
     preds = torch.nn.functional.softmax(res, dim=1)[0] * 100
 
     return classes[idx[0]], preds[idx[0]].item(), preds
+
+# TODO: Finish converting train_model() to retrain purpose
+def retrain(model, opt, imgs, transform, start_epoch=0, classes=['cardboard', 'glass', 'metal', 'paper', 'plastic', 'trash']):
+    '''
+        Continue training on minibatch of new observations
+    '''
+    if len(imgs) < 40:
+
+        print("Not enough training data")
+        return
+    
+    criterion = nn.CrossEntropyLoss()
+
+    # Decay LR by a factor of 0.1 every 7 epochs
+    scheduler = lr_scheduler.StepLR(opt, step_size=5, gamma=0.1)
+
+    new_model_ft, best_acc, loss = train_model(model, criterion, opt, scheduler, start_epoch, num_epochs=5)
+
+    checkpoint = {
+        'epoch': start_epoch + 5,
+        'model': createModel(),
+        'model_state_dict': new_model_ft.state_dict(),
+        'optimizer_state_dict': opt.state_dict()
+    }
+
+    torch.save(checkpoint, 'garbage-classification/models_resnext101_32x8d_acc: {:g} loss: {:g}'.format(best_acc, loss))
 
 if __name__ == "__main__":
 
