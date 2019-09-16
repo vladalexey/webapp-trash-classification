@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<meta charset="UTF-8">
+
+	<meta http-equiv='cache-control' content='no-cache'>
+	<meta http-equiv='expires' content='0'>
+	<meta http-equiv='pragma' content='no-cache'>
+
+	<title> Garbage Sorting Demo - PyTorch and Flask</title>
+
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+	<script type="text/javascript">
+
+		$(window).load(function() {
+				// Animate loader off screen
+				$(".loader").fadeOut("slow");;
+			});
+	</script>
+</head>
+
+<body>
+
+	<h1 class="text-centered"> AI-powered Garbage Sorting </h1>
+
+	<div class="container">
+
+		<script  src="{{ url_for('static',filename='js/index.js') }}"></script>
+		
+		<div class="loader"></div>
+
+		<header class="navbar">
+
+			<form action="/upload" method="post" enctype="multipart/form-data" >
+				<div class="image-upload-wrap">
+
+					<span class="btn btn-default btn-file">
+						<input class="file-upload-input" onchange="readURL(this);" type="file" name="image">
+					</span>
+
+					<div class="drag-text">
+						<h3>Drag and drop a file or select add Image</h3>
+					</div>
+
+				</div>
+
+				<div class="file-upload-content">
+					<h2> Predicted class of trash: {{ class_pred}} at confidence of: {{ confidence }} </h2>
+					<img class="file-upload-image" src="{{ url_for('static',filename= 'uploads/' + filename) }}" alt="Trash Image" />
+					<div class="image-title-wrap">
+						<input type="submit" onclick="removeUpload()" value="Upload your image" class="file-upload-btn">
+					</div>
+				</div>
+			</form>
+			
+
+			<span class="navbar-text"> Garbage Sorting</span>
+		</header>
+
+	</div>
+
+</body>
+</html>
