@@ -5,10 +5,12 @@ import os
 from predict import predict, setup, createModel, get_transform
 
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-IMG_FOLDER = os.path.join('static', 'img')
 app = Flask(__name__)
+IMG_FOLDER = os.path.join('static', 'img')
+
+
 app.config['UPLOAD_FOLDER'] = IMG_FOLDER
+
 
 def delete_prev(path):
     for the_file in os.listdir(path):
@@ -32,13 +34,15 @@ def predict_img(img):
     # return "Prediction: {} at {:g} confidence \nConf list: {}".format(pred, conf, preds)
     return pred, conf
 
+@app.route('/')
+def home():
+    logo = os.path.join(app.config['UPLOAD_FOLDER'], 'treegif.gif')
+    carousel = os.path.join(app.config['UPLOAD_FOLDER'],'gif1.gif')
+    empty_img = os.path.join(app.config['UPLOAD_FOLDER'],'empty.png')
+    return render_template('index.html', my_logo = logo, my_carousel = carousel, empty_image = empty_img, filename='#')
 
-def allowed_file(filename):
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-@app.route("/result",methods=  ['POST'])
-def result():
+@app.route('/upload', methods=  ['POST'])
+def upload_file():
     logo = os.path.join(app.config['UPLOAD_FOLDER'], 'treegif.gif')
     carousel = os.path.join(app.config['UPLOAD_FOLDER'],'gif1.gif')
     empty_img = os.path.join(app.config['UPLOAD_FOLDER'],'empty.png')
@@ -54,18 +58,12 @@ def result():
 
 
         pred, conf = predict_img(f)
-        return render_template('result.html',my_logo = logo, my_carousel = carousel, empty_image = empty_img, posts=posts, filename=filename, class_pred=pred, confidence=conf)
+
+        return render_template('index.html', filename=filename, class_pred=pred, confidence=conf, my_logo = logo, my_carousel = carousel)
     else:
 
         print('No request')
-        return render_template('trash.html',my_logo = logo, my_carousel = carousel, empty_image = empty_img, filename='#', class_pred='None', confidence='None')
-
-@app.route("/")
-def home():
-    logo = os.path.join(app.config['UPLOAD_FOLDER'], 'treegif.gif')
-    carousel = os.path.join(app.config['UPLOAD_FOLDER'],'gif1.gif')
-    empty_img = os.path.join(app.config['UPLOAD_FOLDER'],'empty.png')
-    return render_template('index.html', my_logo = logo, my_carousel = carousel, empty_image = empty_img)
+        return render_template('index.html', filename='#', class_pred='None', confidence='None',my_logo = logo, my_carousel = carousel, empty_image = empty_img)
 
 @app.route('/<filename>')
 def send_file(filename):
@@ -75,6 +73,6 @@ def send_file(filename):
     
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-
 if __name__ == '__main__':
     app.run(debug=True)
+

@@ -52,11 +52,28 @@
     
     <div class="container">
         <div class="row">
-            <div class = "col-8 col-sm-8 offset-4">
+            <div class = "col-8 col-sm-8 offset-3">
                 <label for="avatar">Please choose a picture:</label>
-                <form method=post enctype=multipart/form-data>
-                    <input type=file id = "InpImg" name=file onchange="readURL(this);">
-                    <input type=submit value=Upload class = "btn btn-primary btn-lg"> 
+                <form action="/upload" method="post" enctype="multipart/form-data">
+                    <div class="image-upload-wrap">
+    
+                        <span class="btn btn-default btn-file">
+                            <input class="file-upload-input" onchange="readURL(this);" type="file" name="image">
+                        </span>
+    
+                        <div class="drag-text">
+                            <h3>Drag and drop a file or select add Image</h3>
+                        </div>
+    
+                    </div>
+    
+                    <div class="file-upload-content">
+                        <h2> Predicted class of trash: {{ class_pred}} at confidence of: {{ confidence }} </h2>
+                        <div class="image-title-wrap">
+                            <input type="submit" onclick="removeUpload()" value="Upload your image" class="file-upload-btn">
+    
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
