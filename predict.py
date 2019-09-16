@@ -6,7 +6,7 @@ import numpy as np
 import torchvision
 from torchvision import datasets, models, transforms
 from PIL import Image
-from trash_cnn_pytorch import train_model
+# from trash_cnn_pytorch import train_model
 
 def createModel(num_classes=6, w_drop=True):
 
@@ -43,7 +43,7 @@ def setup(model_dir, model_class):
     checkpoint = torch.load(model_dir, map_location=device)
 
     # Build model structure and optimizer 
-    predictor = model_class()
+    predictor = model_class(w_drop=False)
     opt = optim.SGD(predictor.parameters(), lr=0.001, momentum=0.9)
 
     # Load model weights and optimizer states
@@ -76,30 +76,30 @@ def predict(model, img, transform, epoch, classes=['cardboard', 'glass', 'metal'
     return classes[idx[0]], preds[idx[0]].item(), preds
 
 # TODO: Finish converting train_model() to retrain purpose
-def retrain(model, opt, imgs, transform, start_epoch=0, classes=['cardboard', 'glass', 'metal', 'paper', 'plastic', 'trash']):
-    '''
-        Continue training on minibatch of new observations
-    '''
-    if len(imgs) < 40:
+# def retrain(model, opt, imgs, transform, start_epoch=0, classes=['cardboard', 'glass', 'metal', 'paper', 'plastic', 'trash']):
+#     '''
+#         Continue training on minibatch of new observations
+#     '''
+#     if len(imgs) < 40:
 
-        print("Not enough training data")
-        return
+#         print("Not enough training data")
+#         return
     
-    criterion = nn.CrossEntropyLoss()
+#     criterion = nn.CrossEntropyLoss()
 
-    # Decay LR by a factor of 0.1 every 7 epochs
-    scheduler = lr_scheduler.StepLR(opt, step_size=5, gamma=0.1)
+#     # Decay LR by a factor of 0.1 every 7 epochs
+#     scheduler = lr_scheduler.StepLR(opt, step_size=5, gamma=0.1)
 
-    new_model_ft, best_acc, loss = train_model(model, criterion, opt, scheduler, start_epoch, num_epochs=5)
+#     new_model_ft, best_acc, loss = train_model(model, criterion, opt, scheduler, start_epoch, num_epochs=5)
 
-    checkpoint = {
-        'epoch': start_epoch + 5,
-        'model': createModel(),
-        'model_state_dict': new_model_ft.state_dict(),
-        'optimizer_state_dict': opt.state_dict()
-    }
+#     checkpoint = {
+#         'epoch': start_epoch + 5,
+#         'model': createModel(),
+#         'model_state_dict': new_model_ft.state_dict(),
+#         'optimizer_state_dict': opt.state_dict()
+#     }
 
-    torch.save(checkpoint, 'garbage-classification/models_resnext101_32x8d_acc: {:g} loss: {:g}'.format(best_acc, loss))
+#     torch.save(checkpoint, 'garbage-classification/models_resnext101_32x8d_acc: {:g} loss: {:g}'.format(best_acc, loss))
 
 if __name__ == "__main__":
 

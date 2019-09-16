@@ -12,42 +12,6 @@ import time
 import os
 import copy
 
-plt.ion() 
-
-# Data augmentation and normalization for training
-# Just normalization for validation
-data_transforms = {
-    'train': transforms.Compose([
-        transforms.RandomResizedCrop(224),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ]),
-    'val': transforms.Compose([
-        transforms.Resize(256),
-        transforms.CenterCrop(224),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ]),
-}
-
-data_dir = 'garbage-classification/Garbage classification'
-
-image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
-                                          data_transforms[x])
-                  for x in ['train', 'val']}
-
-print("Train classes: {}".format(image_datasets['train'].classes))
-
-dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=4,
-                                             shuffle=True, num_workers=4)
-              for x in ['train', 'val']}
-dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
-print("Dataset size: {}".format(dataset_sizes))
-
-class_names = image_datasets['train'].classes
-
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def imshow(inp, title=None):
     """Imshow for Tensor."""
@@ -62,24 +26,21 @@ def imshow(inp, title=None):
     plt.pause(0.001)  # pause a bit so that plots are updated
 
 
-# Get a batch of training data
-inputs, classes = next(iter(dataloaders['train']))
 
-# Make a grid from batch
-out = torchvision.utils.make_grid(inputs)
 
-imshow(out, title=[class_names[x] for x in classes])
-
-def createModel(num_classes=6):
+def createModel(num_classes=6, w_drop=True):
 
     model_ft = models.resnext101_32x8d(pretrained=True)
     num_ftrs = model_ft.fc.in_features
-    # model_ft.fc = nn.Linear(num_ftrs, num_classes)
 
-    model_ft.fc = nn.Sequential(
-        nn.Dropout(0.5),
-        nn.Linear(num_ftrs, num_classes)
-    )
+    if not w_drop:
+        model_ft.fc = nn.Linear(num_ftrs, num_classes)
+
+    else:
+        model_ft.fc = nn.Sequential(
+            nn.Dropout(0.5),
+            nn.Linear(num_ftrs, num_classes)
+        )
 
     return model_ft
 
@@ -179,29 +140,77 @@ def visualize_model(model, num_images=6):
                     return
         model.train(mode=was_training)
 
-model_ft = createModel()
+if __name__ == "__main__":
 
-model_ft = model_ft.to(device)
+    plt.ion() 
 
-criterion = nn.CrossEntropyLoss()
+    # Data augmentation and normalization for training
+    # Just normalization for validation
+    data_transforms = {
+        'train': transforms.Compose([
+            transforms.RandomResizedCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        ]),
+        'val': transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        ]),
+    }
 
-# Observe that all parameters are being optimized
-optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)
-# optimizer_ft = optim.Adam(mode]+-[p0o98u3w` qa]\'l_ft.parameters(), lr=0.005)
+    data_dir = 'garbage-classification/Garbage classification'
 
-# Decay LR by a factor of 0.1 every 7 epochs
-exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
+    image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
+                                            data_transforms[x])
+                    for x in ['train', 'val']}
 
-num_epochs = 30
-start_epoch = 0
-model_ft, best_acc, loss = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, start_epoch=start_epoch,
-                       num_epochs= num_epochs)
+    print("Train classes: {}".format(image_datasets['train'].classes))
 
-checkpoint = {
-    'epoch': start_epoch + num_epochs,
-    'model': createModel(),
-    'model_state_dict': model_ft.state_dict(),
-    'optimizer_state_dict': optimizer_ft.state_dict()
-}
+    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=4,
+                                                shuffle=True, num_workers=4)
+                for x in ['train', 'val']}
+    dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
+    print("Dataset size: {}".format(dataset_sizes))
 
-torch.save(checkpoint, 'garbage-classification/models_resnext101_32x8d_acc: {:g} loss: {:g}'.format(best_acc, loss))
+    class_names = image_datasets['train'].classes
+
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
+    # Get a batch of training data
+    inputs, classes = next(iter(dataloaders['train']))
+
+    # Make a grid from batch
+    out = torchvision.utils.make_grid(inputs)
+
+    imshow(out, title=[class_names[x] for x in classes])
+
+    model_ft = createModel()
+
+    model_ft = model_ft.to(device)
+
+    criterion = nn.CrossEntropyLoss()
+
+    # Observe that all parameters are being optimized
+    optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)
+    # optimizer_ft = optim.Adam(mode]+-[p0o98u3w` qa]\'l_ft.parameters(), lr=0.005)
+
+    # Decay LR by a factor of 0.1 every 7 epochs
+    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
+
+    num_epochs = 30
+    start_epoch = 0
+    model_ft, best_acc, loss = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, start_epoch=start_epoch,
+                        num_epochs= num_epochs)
+
+    checkpoint = {
+        'epoch': start_epoch + num_epochs,
+        'model': createModel(),
+        'model_state_dict': model_ft.state_dict(),
+        'optimizer_state_dict': optimizer_ft.state_dict()
+    }
+
+    torch.save(checkpoint, 'garbage-classification/models_resnext101_32x8d_acc: {:g} loss: {:g}'.format(best_acc, loss))
