@@ -13,9 +13,9 @@ Implemented a simple CNN network training from scratch on TensorFlow
 
 Implemented Transfer Learning on two ResNet models of different model complexity:
 - ResNet18
-- ResNext101-32d8 (Experiment Dropout at last FC layer)
+- ResNext101-32d8 (Experimental Dropout at last FC layer)
 
-Implemented a web interface to acquire new observations for trainning
+Implemented a web interface + acquire new observations for trainning using Flask
 
 
 **Instruction**: 
