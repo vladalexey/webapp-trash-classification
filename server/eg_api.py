@@ -24,22 +24,6 @@ def delete_prev(path):
             print(e)
             continue
 
-app = Flask(__name__)
-
-app.root_path = os.path.join(os.getcwd())
-# app.template_folder = os.path.join(os.getcwd(), 'api/templates')
-# app.static_folder = os.path.join(os.getcwd(), 'api/static')
-
-print(os.listdir(app.template_folder))
-print(os.listdir(app.static_folder))
-
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-@app.route('/')
-def hello_world():
-    return render_template('trash.html', filename='#')
-
 def predict_img(img):
 
     model_dir = '../models/models_resnext101_32x8d_acc_ 0.951807 loss_ 0.18151'
@@ -50,6 +34,16 @@ def predict_img(img):
 
     # return "Prediction: {} at {:g} confidence \nConf list: {}".format(pred, conf, preds)
     return pred, conf
+
+app = Flask(__name__)
+app.root_path = os.path.join(os.getcwd())
+
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@app.route('/')
+def home():
+    return render_template('trash.html', filename='#')
 
 @app.route('/upload', methods=  ['POST'])
 def upload_file():

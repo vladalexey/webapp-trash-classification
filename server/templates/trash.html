@@ -10,7 +10,8 @@
 	<meta http-equiv='pragma' content='no-cache'>
 
 	<title> Garbage Sorting Demo - PyTorch and Flask</title>
-
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
 	<script type="text/javascript">
 
@@ -51,6 +52,7 @@
 					<img class="file-upload-image" src="{{ url_for('static',filename= 'uploads/' + filename) }}" alt="Trash Image" />
 					<div class="image-title-wrap">
 						<input type="submit" onclick="removeUpload()" value="Upload your image" class="file-upload-btn">
+
 					</div>
 				</div>
 			</form>
@@ -58,8 +60,39 @@
 
 			<span class="navbar-text"> Garbage Sorting</span>
 		</header>
-
 	</div>
 
+	<div class="container">
+		<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Wrong prediction?</button>
+
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+			
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Incorrect result</h4>
+					</div>
+					<div class="modal-body">
+						<p>Please choose the appropriate type of trash to be categorized?</p>
+
+						<label class="radio-inline"><input type="radio" name="optradio" checked>Paper</label>
+						<label class="radio-inline"><input type="radio" name="optradio">Glass</label>
+						<label class="radio-inline"><input type="radio" name="optradio">Metal</label>
+						<label class="radio-inline"><input type="radio" name="optradio">Cardboard</label>
+						<label class="radio-inline"><input type="radio" name="optradio">Plastic</label>
+						<label class="radio-inline"><input type="radio" name="optradio">Trash</label>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Submit</button>
+					</div>
+				</div>
+			
+			</div>
+		</div>
+	</div>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </body>
 </html>
