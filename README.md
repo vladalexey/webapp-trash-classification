@@ -19,5 +19,5 @@ Implemented a web interface + acquire new observations for trainning using Flask
 
 
 **Instruction**: 
-- Download link to trained model: https://drive.google.com/file/d/1GSvoK-0os_i2ZljgdpKoCvo17wg6C-nF/view?usp=sharing
+- Download link to trained model: https://drive.google.com/file/d/1-2kvwC3w2SdOvROc1RXwUX9bufdM0fC3/view?usp=sharing
 - Put downloaded model into /models
